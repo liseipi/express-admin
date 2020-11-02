@@ -12,10 +12,10 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
   try {
     let data = await getAbout()
     response.send(data)
-  } catch (e) {
-    return next(new Error())
+  } catch (error) {
+    // return next(new Error())
+    return next(error)
   }
-
 })
 
 export default router
