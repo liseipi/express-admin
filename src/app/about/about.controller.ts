@@ -18,4 +18,8 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
   }
 })
 
+router.get('/abc', (request: Request, response: Response, next: NextFunction) => {
+  response.send({ a: 123 })
+})
+
 export default router
