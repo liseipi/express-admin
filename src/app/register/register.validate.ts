@@ -24,13 +24,13 @@ export const validateUserData = async (
   validation.passes()
   if (Number(validation.errorCount) > 0) {
     let allError = validation.errors.all()
-    return response.status(400).send({ message: allError })
+    return response.status(400).send({ statusCode: 400, message: allError })
     // return next(new Error(JSON.stringify(allError)))
   }
 
   const user = await getUserByEmail(email)
   if (user) {
-    return response.status(409).send({ message: '用户email地址已存在.' })
+    return response.status(409).send({ statusCode: 409, message: '用户email地址已存在.' })
   }
 
   next()

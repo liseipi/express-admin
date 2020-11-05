@@ -6,7 +6,7 @@ export default async (connection: any) => {
 
   const statement = `CREATE TABLE IF NOT EXISTS ${tabName} (
     id                  INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    pid                 INT NOT NULL UNIQUE KEY,
+    uid                 INT NOT NULL UNIQUE KEY,
     username            CHAR(255),
     createdAt           BIGINT NOT NULL,
     updatedAt           BIGINT NOT NULL
