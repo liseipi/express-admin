@@ -7,7 +7,7 @@ export default async (connection: any) => {
   const statement = `CREATE TABLE IF NOT EXISTS ${tabName} (
     id                  INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     email               CHAR(255) NOT NULL UNIQUE KEY,
-    passwrod            CHAR(255) NOT NULL,
+    password            CHAR(255) NOT NULL,
     createdAt           BIGINT NOT NULL,
     updatedAt           BIGINT NOT NULL
   ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`
