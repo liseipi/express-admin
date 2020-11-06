@@ -10,9 +10,22 @@ import { connection } from '../../database/mysql'
 export const getUserByEmail = async (email: string) => {
   let statement = `
     SELECT 
+      id,
+      email,
+      password
+    FROM admin
+    WHERE admin.email = ?
+  `
+  const [data] = await connection.promise().query(statement, email)
+  let result = data as any
+  return result[0]
+}
+
+export const getUserInfo = async (email: string) => {
+  let statement = `
+    SELECT 
       admin.id, 
-      admin.email, 
-      admin.password,
+      admin.email,
       JSON_OBJECT(
         'username', profile.username
       ) as profile
@@ -22,5 +35,6 @@ export const getUserByEmail = async (email: string) => {
     WHERE admin.email = ?
   `
   const [data] = await connection.promise().query(statement, email)
-  return Array.isArray(data) && data[0]
+  let result = data as any
+  return result[0]
 }
