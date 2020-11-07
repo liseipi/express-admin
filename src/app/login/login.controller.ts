@@ -8,7 +8,11 @@ import { getUserByEmail } from './login.service'
 
 const router = express.Router()
 
-router.post('/', validateLoginData, async (request: Request, response: Response, next: NextFunction) => {
+router.post('/', validateLoginData, async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
   try {
     const { email, password } = request.body
 
@@ -26,7 +30,7 @@ router.post('/', validateLoginData, async (request: Request, response: Response,
 
     // 生成token
     let payload = { id: user.id, email: user.email }
-    let token = jwt.sign(payload, `${env.TOKEN_SECRET}`, {  expiresIn: '1h' })
+    let token = jwt.sign(payload, `${env.PRIVATE_KEY}`, { algorithm: 'RS256',  expiresIn: '1h' })
 
     return response.status(200).send({ token })
 

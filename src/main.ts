@@ -5,6 +5,7 @@ import { connection } from './database/mysql'
 connection.connect(error => {
   if (error) {
     console.log('数据库连接失败..')
+    console.log(error)
     return
   }
   console.log('数据库OK')
