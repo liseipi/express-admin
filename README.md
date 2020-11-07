@@ -11,7 +11,7 @@ typescript的位置： ./node_modules/.bin/tsc --init
 npm install
 ```
 
-###windows安装openssl
+### windows安装openssl
 访问 https://slproweb.com/products/Win32OpenSSL.html
 
 下载Win64 OpenSSL安装后，打开 环境变量 -> 系统变量
