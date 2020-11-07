@@ -18,7 +18,7 @@ npm install
 
 在 Path 中加入安装路径 C:\Program Files\OpenSSL-Win64\bin
 
-###生成密钥和公钥
+### 生成密钥和公钥
 ```
 cd /key
 openssl
