@@ -4,8 +4,8 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const privateKey = fs.readFileSync(path.resolve(__dirname, '../../key/private.key'))
-const publicKey = fs.readFileSync(path.resolve(__dirname, '../../key/public.key'))
+const privateKey = fs.readFileSync(path.resolve(__dirname, '../../src/config/key/private.key'))
+const publicKey = fs.readFileSync(path.resolve(__dirname, '../../src/config/key/public.key'))
 process.env['PRIVATE_KEY'] = privateKey.toString()
 process.env['PUBLIC_KEY'] = publicKey.toString()
 
