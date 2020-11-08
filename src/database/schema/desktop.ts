@@ -5,7 +5,7 @@ export default async (connection: any) => {
   await connection.promise().query(dropSql)
 
   const statement = `CREATE TABLE IF NOT EXISTS ${tabName} (
-    id                  INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id                  INT NOT NULL AUTO_INCREMENT PRIMARY KEY NOT NULL,
     snID                CHAR(255) NOT NULL UNIQUE KEY COMMENT '主机资产编号',
     name                CHAR(255),
     name_en             CHAR(255),
