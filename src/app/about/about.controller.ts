@@ -8,18 +8,26 @@ const router = express.Router()
 //   response.send('about')
 // }
 
+/**
+ * @swagger
+ * /about
+ *  get:
+ *      tags:
+ *        - aaa
+ *
+ */
 router.get('/', async (request: Request, response: Response, next: NextFunction) => {
   try {
     let data = await getAbout()
-    response.send(data)
+    response.send({
+      author: "Oli Liu",
+      email: "reg_user@qq.com",
+      age: 18
+    })
   } catch (error) {
     // return next(new Error())
     return next(error)
   }
-})
-
-router.get('/abc', (request: Request, response: Response, next: NextFunction) => {
-  response.send({ a: 123 })
 })
 
 export default router

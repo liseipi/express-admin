@@ -8,11 +8,32 @@ import { getUserByEmail } from './login.service'
 
 const router = express.Router()
 
-router.post('/', validateLoginData, async (
-    request: Request,
-    response: Response,
-    next: NextFunction
-) => {
+/**
+ * @api {post} /login 用户登录
+ * @apiVersion 1.0.0
+ * @apiGroup 用户
+ *
+ * @apiParam {Number} id Users unique ID.
+ *
+ * @apiSuccess {String} firstname Firstname of the User.
+ * @apiSuccess {String} lastname  Lastname of the User.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "firstname": "John",
+ *       "lastname": "Doe"
+ *     }
+ *
+ * @apiError UserNotFound The id of the User was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "UserNotFound"
+ *     }
+ */
+router.post('/', validateLoginData, async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { email, password } = request.body
 
@@ -30,7 +51,7 @@ router.post('/', validateLoginData, async (
 
     // 生成token
     let payload = { id: user.id, email: user.email }
-    let token = jwt.sign(payload, `${env.PRIVATE_KEY}`, { algorithm: 'RS256',  expiresIn: '1h' })
+    let token = jwt.sign(payload, `${env.PRIVATE_KEY}`, { algorithm: 'RS256', expiresIn: '1h' })
 
     return response.status(200).send({ token })
 
