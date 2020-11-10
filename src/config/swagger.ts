@@ -1,15 +1,21 @@
 export const swaggerDocument = {
   definition: {
-    openapi: '3.0.0',
+    openapi: '3.0.3',
     info: {
       title: 'Express Admin 项目',
-      version: '1.0.0',
-      description: 'express admin'
-    }
+      description: 'express admin',
+      version: '1.0.0'
+    },
+    servers: [
+      {
+        url: "http://localhost:9288/api",
+      },
+    ]
   },
   apis: [
     'dist/app/**/*.controller.js'
-  ]
+  ],
+  basePath: '/api'
 }
 
 export const swaggerOptions = {

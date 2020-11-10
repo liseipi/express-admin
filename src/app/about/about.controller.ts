@@ -10,11 +10,17 @@ const router = express.Router()
 
 /**
  * @swagger
- * /about
- *  get:
+ * /about:
+ *    get:
  *      tags:
- *        - aaa
- *
+ *        - "关于作者"
+ *      summary: 关于Oli
+ *      description: "获取作者Oli的相关信息 - Api接口测试数据"
+ *      produces:
+ *       - application/json
+ *      responses:
+ *        "200":
+ *          description: "successful operation"
  */
 router.get('/', async (request: Request, response: Response, next: NextFunction) => {
   try {
