@@ -48,7 +48,7 @@ router.post('/', validateLoginData, async (request: Request, response: Response,
     let payload = { id: user.id, email: user.email }
     let token = jwt.sign(payload, `${env.PRIVATE_KEY}`, { algorithm: 'RS256', expiresIn: '1h' })
 
-    return response.status(200).send({ token })
+    return response.status(200).send({ status: 200, message: 'OK.', result: { token } })
 
   } catch (error) {
     return next(new Error(error))
