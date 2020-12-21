@@ -32,13 +32,47 @@ router.get('/getUserInfo', async (request: Request, response: Response, next: Ne
 
 router.get('/user/getAll', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    let data = await User.getAllUser()
+    let key = request.query
+    let data = await User.getAllUser(key)
 
     return response.send({
       statusCode: 200,
       message: 'ok',
       result: {
         data
+      }
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+router.post('/user/add', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const { data } = request.body
+    let res = await User.userAdd(data)
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: {
+        res
+      }
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+router.get('/user/destroy/:id', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    let { id } = request.params
+    let res = await User.destroyUser(Number(id))
+
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: {
+        res
       }
     })
   } catch (error) {
