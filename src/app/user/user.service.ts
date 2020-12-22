@@ -9,7 +9,7 @@ export const getAllUser = async (key: SearchUserModel) => {
   const statement = `
     SELECT * FROM user ${whereName}
   `
-  console.log(statement)
+  // console.log(statement)
   const [data] = await connection.promise().query(statement)
   return data
 }

@@ -1,6 +1,15 @@
 import { connection } from '../../database/mysql'
+import { SearchAssetsModel } from './assets.model'
 
-export const getAllAssets = async () => {
+export const getAllAssets = async (key: SearchAssetsModel) => {
+  let whereName = ''
+  if (key.keyword && key.select) {
+    if (key.select == 'name') {
+      whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
+    } else {
+      whereName = `WHERE desktop.${key.select} = '${key.keyword}'`
+    }
+  }
   const statement = `
     SELECT 
       *,
@@ -10,8 +19,10 @@ export const getAllAssets = async () => {
       ) AS user_info
     FROM desktop
     LEFT JOIN user
-      ON user.id = desktop.user_id
+      ON user.id = desktop.user_id 
+    ${whereName}
   `
+  console.log(statement)
   const [data] = await connection.promise().query(statement)
   return data
 }
@@ -55,7 +66,7 @@ export const getDetails = async (id: number) => {
     LEFT JOIN user
       ON user.id = desktop.user_id
     LEFT JOIN monitor
-      ON monitor.desktop_id = desktop.id
+      ON monitor.user_id = desktop.user_id
     WHERE desktop.id = ${id}
     GROUP BY desktop.id;
   `
