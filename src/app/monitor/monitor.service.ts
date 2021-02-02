@@ -1,18 +1,18 @@
 import { connection } from '../../database/mysql'
-import { SearchAssetsModel, AddAssetsModel, EditAssetsModel } from './assets.model'
+import { SearchMonitorModel, AddMonitorModel, UpdateMonitorModel } from './monitor.model'
 
-export const getAllAssets = async (key: SearchAssetsModel) => {
+export const getAllMonitor = async (key: SearchMonitorModel) => {
   let whereName = ''
   if (key.keyword && key.select) {
     if (key.select == 'name') {
       whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
     } else {
-      whereName = `WHERE desktop.${key.select} = '${key.keyword}'`
+      whereName = `WHERE monitor.${key.select} = '${key.keyword}'`
     }
   }
   const statement = `
     SELECT 
-      desktop.*,
+      monitor.*,
       JSON_OBJECT(
         'name', user.name,
         'name_en', user.name_en
@@ -21,17 +21,17 @@ export const getAllAssets = async (key: SearchAssetsModel) => {
       attribution.name as attribution_name,
       branch.name as branch_name,
       department.name as department_name
-    FROM desktop
+    FROM monitor
     LEFT JOIN user
-      ON user.id = desktop.user_id
+      ON user.id = monitor.user_id
     LEFT JOIN position
-      ON position.id = desktop.position 
+      ON position.id = monitor.position 
     LEFT JOIN attribution
-      ON attribution.id = desktop.attribution
+      ON attribution.id = monitor.attribution
     LEFT JOIN branch
-      ON branch.id = desktop.branch
+      ON branch.id = monitor.branch
     LEFT JOIN department
-      ON department.id = desktop.department
+      ON department.id = monitor.department
     ${whereName}
   `
   const [data] = await connection.promise().query(statement)
@@ -41,14 +41,14 @@ export const getAllAssets = async (key: SearchAssetsModel) => {
 export const getDetails = async (id: number) => {
   const statement = `
     SELECT
-      desktop.*,
+      monitor.*,
       JSON_OBJECT(
         'name', user.name,
         'name_en', user.name_en
       ) AS user_info,
       CAST(
         IF(
-          COUNT(monitor.id),
+          COUNT(desktop.id),
           CONCAT(
             '[',
             GROUP_CONCAT(
@@ -63,71 +63,47 @@ export const getDetails = async (id: number) => {
           ),
           NULL
         ) AS JSON
-      ) AS monitor_info,
+      ) AS desktop_info,
       position.name as position_name,
       attribution.name as attribution_name,
       branch.name as branch_name,
       department.name as department_name
-    FROM desktop
+    FROM monitor
     LEFT JOIN user
-      ON user.id = desktop.user_id
-    LEFT JOIN monitor
+      ON user.id = monitor.user_id
+    LEFT JOIN desktop
       ON monitor.desktop_id = desktop.id
     LEFT JOIN position
-      ON position.id = desktop.position 
+      ON position.id = monitor.position 
     LEFT JOIN attribution
-      ON attribution.id = desktop.attribution
+      ON attribution.id = monitor.attribution
     LEFT JOIN branch
-      ON branch.id = desktop.branch
+      ON branch.id = monitor.branch
     LEFT JOIN department
-      ON department.id = desktop.department
-    WHERE desktop.id = ${id}
-    GROUP BY desktop.id;
+      ON department.id = monitor.department
+    WHERE monitor.id = ${id}
+    GROUP BY monitor.id;
   `
 
   const [data] = await connection.promise().query(statement, id)
   return data
 }
 
-export const add = async (values: AddAssetsModel) => {
+export const add = async(values: AddMonitorModel) => {
   const statement = `
-    INSERT INTO desktop
+    INSERT INTO monitor
     SET ?
   `
   const [data] = await connection.promise().query(statement, values)
   return data
 }
 
-export const update = async (id: number, values: EditAssetsModel) => {
+export const update = async(id: number, values: AddMonitorModel) => {
   const statement = `
-    UPDATE desktop
+    UPDATE monitor
       SET ?
       WHERE id = ?;
   `
   const [data] = await connection.promise().query(statement, [values, id])
-  return data
-}
-
-export const relatedMonitor = async (desktop_id: number, id: Array<number>) => {
-  const statement = `
-      UPDATE monitor SET desktop_id = ? WHERE id in (${id.toString()});
-    `
-  const [data] = await connection.promise().query(statement, desktop_id)
-  return data
-}
-
-export const delMonitor = async (id: Array<number>) => {
-  const statement = `
-      UPDATE monitor SET desktop_id = 0 WHERE id in (${id.toString()});
-    `
-  const [data] = await connection.promise().query(statement)
-  return data
-}
-
-export const getRelatedMonitor = async (desktop_id: number) => {
-  const statement = `
-      SELECT id FROM monitor WHERE desktop_id = ?;
-    `
-  const [data] = await connection.promise().query(statement, desktop_id)
   return data
 }
