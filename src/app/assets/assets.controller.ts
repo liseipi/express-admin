@@ -43,7 +43,8 @@ router.post('/add', async (request: Request, response: Response, next: NextFunct
   try {
     const { data } = request.body
     if (data.hasOwnProperty('status')) {
-      data.status = data.status ? 0 : 1
+      // data.status = data.status ? 0 : 1
+      data.status = Number(data.status)
     }
     data.createdAt = Math.floor(Date.now() / 1000)
     data.updatedAt = Math.floor(Date.now() / 1000)
@@ -73,7 +74,8 @@ router.post('/update/:id', async (request: Request, response: Response, next: Ne
     let { id } = request.params
     const { data } = request.body
     if (data.hasOwnProperty('status')) {
-      data.status = data.status ? 0 : 1
+      // data.status = data.status ? 0 : 1
+      data.status = Number(data.status)
     }
     data.updatedAt = Math.floor(Date.now() / 1000)
     let monitor_id: Array<number> = []

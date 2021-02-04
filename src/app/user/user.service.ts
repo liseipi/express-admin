@@ -31,3 +31,91 @@ export const destroyUser = async (uid: number) => {
   const [data] = await connection.promise().query(statement, uid)
   return data
 }
+
+export const getAssets = async (uid: number) => {
+  const statement = `
+    SELECT
+      user.*,
+      CAST(
+        IF(
+          COUNT(desktop.id),
+          CONCAT(
+            '[',
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', desktop.id,
+                'snID', desktop.snID,
+                'ip', desktop.ip_address,
+                'mac_address', desktop.mac_address,
+                'ram', desktop.ram,
+                'cpu_info', desktop.cpu_info,
+                'disk', desktop.disk
+              )
+            ),
+            ']'
+          ),
+          NULL
+        ) AS JSON
+      ) AS desktop_info,
+      CAST(
+        IF(
+          COUNT(monitor.id),
+          CONCAT(
+            '[',
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', monitor.id,
+                'snID', monitor.snID,
+                'brand', monitor.brand,
+                'model', monitor.model
+              )
+            ),
+            ']'
+          ),
+          NULL
+        ) AS JSON
+      ) AS monitor_info,
+      CAST(
+        IF(
+          COUNT(other.id),
+          CONCAT(
+            '[',
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', monitor.id,
+                'snID', monitor.snID,
+                'brand', monitor.brand,
+                'model', monitor.model
+              )
+            ),
+            ']'
+          ),
+          NULL
+        ) AS JSON
+      ) AS other_info,
+      position.name as position_name,
+      attribution.name as attribution_name,
+      branch.name as branch_name,
+      department.name as department_name
+    FROM user
+    LEFT JOIN desktop
+      ON desktop.user_id = user.id
+    LEFT JOIN monitor
+      ON monitor.user_id = user.id
+    LEFT JOIN other
+      ON other.user_id = user.id
+    LEFT JOIN position
+      ON position.id = user.position 
+    LEFT JOIN attribution
+      ON attribution.id = user.attribution
+    LEFT JOIN branch
+      ON branch.id = user.branch
+    LEFT JOIN department
+      ON department.id = user.department
+    WHERE user.id = ${uid}
+    GROUP BY user.id;
+  `
+
+  const [data] = await connection.promise().query(statement, uid)
+  return data
+}

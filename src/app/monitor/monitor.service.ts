@@ -38,6 +38,16 @@ export const getAllMonitor = async (key: SearchMonitorModel) => {
   return data
 }
 
+export const getAllMonitorNull = async () => {
+  const statement = `
+    SELECT *
+      FROM monitor
+      WHERE desktop_id = 0 OR desktop_id IS NULL;
+  `
+  const [data] = await connection.promise().query(statement)
+  return data
+}
+
 export const getDetails = async (id: number) => {
   const statement = `
     SELECT

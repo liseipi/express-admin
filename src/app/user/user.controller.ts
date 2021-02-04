@@ -4,22 +4,6 @@ import * as User from './user.service'
 
 const router = express.Router()
 
-/**
- * @swagger
- * /getUserInfo:
- *    get:
- *      tags:
- *        - "个人中心"
- *      summary: 获取用户信息
- *      description: "获取用户个人信息"
- *      produces:
- *       - application/json
- *      responses:
- *        "200":
- *          description: "successful operation"
- *
- *
- */
 router.get('/getUserInfo', async (request: Request, response: Response, next: NextFunction) => {
   response.send({
     status: 200,
@@ -67,6 +51,23 @@ router.get('/user/destroy/:id', async (request: Request, response: Response, nex
   try {
     let { id } = request.params
     let res = await User.destroyUser(Number(id))
+
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: {
+        res
+      }
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+router.get('/user/assets/:id', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    let { id } = request.params
+    let res = await User.getAssets(Number(id))
 
     return response.send({
       statusCode: 200,
