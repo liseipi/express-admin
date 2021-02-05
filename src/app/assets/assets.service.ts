@@ -3,11 +3,20 @@ import { SearchAssetsModel, AddAssetsModel, EditAssetsModel } from './assets.mod
 
 export const getAllAssets = async (key: SearchAssetsModel) => {
   let whereName = ''
-  if (key.keyword && key.select) {
-    if (key.select == 'name') {
-      whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
-    } else {
+  if (key.keyword) {
+    // if (key.select == 'name') {
+    //   whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
+    // }
+    if (key.select) {
       whereName = `WHERE desktop.${key.select} = '${key.keyword}'`
+
+      if (key.status && String(key.status) !== '-1') {
+        whereName += `AND desktop.status = ${Number(key.status)}`
+      }
+    }
+  } else {
+    if (key.status && String(key.status) !== '-1') {
+      whereName = `WHERE desktop.status = ${Number(key.status)}`
     }
   }
   const statement = `

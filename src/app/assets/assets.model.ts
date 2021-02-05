@@ -1,5 +1,6 @@
 export class SearchAssetsModel {
   select?: String
+  status?: String
   keyword?: String
 }
 

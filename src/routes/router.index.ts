@@ -2,8 +2,12 @@ import express from 'express'
 import {authGuard} from "../middleware/global"
 // import * as aboutController from '../app/about/about.controller'
 // import aboutController from '../app/about/about.controller'
+
 import registerController from '../app/register/register.controller'
 import loginController from '../app/login/login.controller'
+
+import qrcodeController from '../app/qrcode/qrcode.controller'
+
 import dashboardController from '../app/dashboard/dashboard.controller'
 import userController from '../app/user/user.controller'
 import assetsController from '../app/assets/assets.controller'
@@ -17,6 +21,8 @@ const router = express.Router()
 // router.use('/about', aboutController)
 router.use('/register', registerController)
 router.use('/login', loginController)
+
+router.use('/qrcode', qrcodeController)
 
 router.use(authGuard)
 router.use('/dashboard', dashboardController)

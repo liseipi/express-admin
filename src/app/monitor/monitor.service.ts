@@ -3,11 +3,20 @@ import { SearchMonitorModel, AddMonitorModel, UpdateMonitorModel } from './monit
 
 export const getAllMonitor = async (key: SearchMonitorModel) => {
   let whereName = ''
-  if (key.keyword && key.select) {
-    if (key.select == 'name') {
-      whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
-    } else {
+  if (key.keyword) {
+    // if (key.select == 'name') {
+    //   whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
+    // }
+    if (key.select) {
       whereName = `WHERE monitor.${key.select} = '${key.keyword}'`
+
+      if (key.status && String(key.status) !== '-1') {
+        whereName += `AND monitor.status = ${Number(key.status)}`
+      }
+    }
+  } else {
+    if (key.status && String(key.status) !== '-1') {
+      whereName = `WHERE monitor.status = ${Number(key.status)}`
     }
   }
   const statement = `

@@ -1,5 +1,6 @@
 export class SearchMonitorModel {
   select?: String
+  status?: String
   keyword?: String
 }
 
