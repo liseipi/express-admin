@@ -2,10 +2,10 @@ import app from './app'
 import env from './config/env'
 import { connection } from './database/mysql'
 
-connection.connect(error => {
-  if (error) {
+connection.getConnection((err, con) => {
+  if (err) {
     console.log('数据库连接失败..')
-    console.log(error)
+    console.log(err)
     return
   }
   console.log('数据库OK')
