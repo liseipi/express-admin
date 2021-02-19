@@ -45,7 +45,7 @@ export const getAssets = async (uid: number) => {
               DISTINCT JSON_OBJECT(
                 'id', desktop.id,
                 'snID', desktop.snID,
-                'ip', desktop.ip_address,
+                'ip_address', desktop.ip_address,
                 'mac_address', desktop.mac_address,
                 'ram', desktop.ram,
                 'cpu_info', desktop.cpu_info,
