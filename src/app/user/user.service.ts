@@ -82,10 +82,10 @@ export const getAssets = async (uid: number) => {
             '[',
             GROUP_CONCAT(
               DISTINCT JSON_OBJECT(
-                'id', monitor.id,
-                'snID', monitor.snID,
-                'brand', monitor.brand,
-                'model', monitor.model
+                'id', other.id,
+                'snID', other.snID,
+                'sn_name', other.sn_name,
+                'model', other.model
               )
             ),
             ']'
