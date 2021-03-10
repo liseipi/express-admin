@@ -23,6 +23,26 @@ export const userAdd = async (user: AddUserModel) => {
   return data
 }
 
+export const findOne = async (uid: number) => {
+  const statement = `
+    SELECT * FROM user
+    WHERE id = ?
+  `
+  const [data] = await connection.promise().query(statement, uid)
+  let result = data as any
+  return result[0]
+}
+
+export const userEdit = async (user: AddUserModel, uid: number) => {
+  const statement = `
+    UPDATE user
+      SET ?
+      WHERE id = ?;
+  `
+  const [data] = await connection.promise().query(statement, [user, uid])
+  return data
+}
+
 export const destroyUser = async (uid: number) => {
   const statement = `
     DELETE FROM user

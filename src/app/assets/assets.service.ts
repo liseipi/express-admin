@@ -8,7 +8,7 @@ export const getAllAssets = async (key: SearchAssetsModel) => {
     //   whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
     // }
     if (key.select) {
-      whereName = `WHERE desktop.${key.select} = '${key.keyword}'`
+      whereName = `WHERE desktop.${key.select} LIKE '%${key.keyword}%'`
 
       if (key.status && String(key.status) !== '-1') {
         whereName += `AND desktop.status = ${Number(key.status)}`
@@ -42,6 +42,7 @@ export const getAllAssets = async (key: SearchAssetsModel) => {
     LEFT JOIN department
       ON department.id = desktop.department
     ${whereName}
+    ORDER BY desktop.snID ASC
   `
   const [data] = await connection.promise().query(statement)
   return data

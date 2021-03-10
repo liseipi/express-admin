@@ -47,6 +47,38 @@ router.post('/user/add', async (request: Request, response: Response, next: Next
   }
 })
 
+router.get('/user/findOne/:id', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    let { id } = request.params
+    let data = await User.findOne(Number(id))
+
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: data
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+router.post('/user/edit/:id', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const { data } = request.body
+    let { id } = request.params
+    let res = await User.userEdit(data, Number(id))
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: {
+        res
+      }
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
 router.get('/user/destroy/:id', async (request: Request, response: Response, next: NextFunction) => {
   try {
     let { id } = request.params
