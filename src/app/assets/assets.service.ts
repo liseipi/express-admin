@@ -105,6 +105,7 @@ export const add = async (values: AddAssetsModel) => {
     SET ?
   `
   const [data] = await connection.promise().query(statement, values)
+  console.log(data)
   return data
 }
 
