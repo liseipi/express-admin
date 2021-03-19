@@ -47,7 +47,18 @@ router.post('/add', async (request: Request, response: Response, next: NextFunct
     data.createdAt = Math.floor(Date.now() / 1000)
     data.updatedAt = Math.floor(Date.now() / 1000)
 
-    let res = await service.add(data)
+    let res: any = await service.add(data)
+
+    // 记录用户资产日志
+    if (data.user_id) {
+      let saveData = {
+        other_id: Number(res.insertId),
+        user_id: Number(data.user_id),
+        start_time: Math.floor(Date.now() / 1000)
+      }
+      await service.saveLog(saveData)
+    }
+
     return response.send({
       statusCode: 200,
       message: 'ok',
@@ -56,7 +67,11 @@ router.post('/add', async (request: Request, response: Response, next: NextFunct
       }
     })
   } catch (error) {
-    return next(error)
+    return response.send({
+      statusCode: 202,
+      message: error.message,
+      result: null
+    })
   }
 })
 
@@ -64,17 +79,53 @@ router.post('/update/:id', async (request: Request, response: Response, next: Ne
   try {
     let { id } = request.params
     const { data } = request.body
+    let oldUserId = data.old_user_id
+    delete data.old_user_id
+
     if (data.hasOwnProperty('status')) {
       data.status = Number(data.status)
     }
     data.updatedAt = Math.floor(Date.now() / 1000)
 
-    let MonitorInfo: any = await service.update(Number(id), data)
+    let OtherInfo: any = await service.update(Number(id), data)
+
+    // 记录用户资产日志
+    if (data.user_id != oldUserId) {
+      if (oldUserId) {
+        let endTime = Math.floor(Date.now() / 1000)
+        await service.saveLogEnd(Number(id), oldUserId, endTime)
+      }
+      let saveData = {
+        other_id: Number(id),
+        user_id: Number(data.user_id),
+        start_time: Math.floor(Date.now() / 1000)
+      }
+      await service.saveLog(saveData)
+    }
 
     return response.send({
       statusCode: 200,
       message: 'ok',
-      result: { MonitorInfo }
+      result: { OtherInfo }
+    })
+  } catch (error) {
+    return response.send({
+      statusCode: 202,
+      message: error.message,
+      result: null
+    })
+  }
+})
+
+router.get('/getLogs/:id', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    let { id } = request.params
+    let data = await service.getLogs(Number(id))
+
+    return response.send({
+      statusCode: 200,
+      message: 'ok',
+      result: data
     })
   } catch (error) {
     return next(error)

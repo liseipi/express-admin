@@ -1,5 +1,5 @@
 import { connection } from '../../database/mysql'
-import { SearchMonitorModel, AddMonitorModel, UpdateMonitorModel } from './monitor.model'
+import { SearchMonitorModel, AddMonitorModel, UpdateMonitorModel, SaveLog } from './monitor.model'
 
 export const getAllMonitor = async (key: SearchMonitorModel) => {
   let whereName = ''
@@ -8,7 +8,7 @@ export const getAllMonitor = async (key: SearchMonitorModel) => {
     //   whereName = `WHERE user.${key.select} LIKE '%${key.keyword}%'`
     // }
     if (key.select) {
-      whereName = `WHERE monitor.${key.select} = '${key.keyword}'`
+      whereName = `WHERE monitor.${key.select} LIKE '%${key.keyword}%'`
 
       if (key.status && String(key.status) !== '-1') {
         whereName += `AND monitor.status = ${Number(key.status)}`
@@ -124,5 +124,42 @@ export const update = async(id: number, values: AddMonitorModel) => {
       WHERE id = ?;
   `
   const [data] = await connection.promise().query(statement, [values, id])
+  return data
+}
+
+export const saveLog = async (saveLog: SaveLog) => {
+  const statement = `
+    INSERT INTO monitor_log
+    SET ?
+  `
+  const [data] = await connection.promise().query(statement, saveLog)
+  return data
+}
+
+export const saveLogEnd = async (monitor_id: Number, user_id: Number, end_time: Number) => {
+  const statement = `
+    UPDATE monitor_log
+      SET end_time = ${end_time}
+      WHERE monitor_id = ${monitor_id} AND user_id = ${user_id};
+  `
+  const [data] = await connection.promise().query(statement)
+  return data
+}
+
+export const getLogs = async (id: number) => {
+  const statement = `
+    SELECT
+      monitor_log.*,
+      JSON_OBJECT(
+        'name', user.name,
+        'name_en', user.name_en
+      ) AS user_info
+    FROM monitor_log
+    LEFT JOIN user
+      ON user.id = monitor_log.user_id
+    WHERE monitor_log.monitor_id = ${id}
+  `
+
+  const [data] = await connection.promise().query(statement)
   return data
 }

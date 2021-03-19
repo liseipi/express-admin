@@ -32,3 +32,10 @@ export class UpdateMonitorModel {
   status?: Number
   updatedAt: Number
 }
+
+export class SaveLog {
+  other_id: Number
+  user_id: Number
+  start_time?: any
+  end_time?: any
+}

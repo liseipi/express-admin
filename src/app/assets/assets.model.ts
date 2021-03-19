@@ -42,3 +42,10 @@ export class EditAssetsModel {
   status?: Number
   updatedAt: Number
 }
+
+export class SaveLog {
+  desktop_id: Number
+  user_id: Number
+  start_time?: any
+  end_time?: any
+}

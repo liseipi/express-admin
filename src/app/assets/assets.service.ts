@@ -1,5 +1,5 @@
 import { connection } from '../../database/mysql'
-import { SearchAssetsModel, AddAssetsModel, EditAssetsModel } from './assets.model'
+import { SearchAssetsModel, AddAssetsModel, EditAssetsModel, SaveLog } from './assets.model'
 
 export const getAllAssets = async (key: SearchAssetsModel) => {
   let whereName = ''
@@ -105,7 +105,6 @@ export const add = async (values: AddAssetsModel) => {
     SET ?
   `
   const [data] = await connection.promise().query(statement, values)
-  console.log(data)
   return data
 }
 
@@ -140,5 +139,42 @@ export const getRelatedMonitor = async (desktop_id: number) => {
       SELECT id FROM monitor WHERE desktop_id = ?;
     `
   const [data] = await connection.promise().query(statement, desktop_id)
+  return data
+}
+
+export const saveLog = async (saveLog: SaveLog) => {
+  const statement = `
+    INSERT INTO desktop_log
+    SET ?
+  `
+  const [data] = await connection.promise().query(statement, saveLog)
+  return data
+}
+
+export const saveLogEnd = async (desktop_id: Number, user_id: Number, end_time: Number) => {
+  const statement = `
+    UPDATE desktop_log
+      SET end_time = ${end_time}
+      WHERE desktop_id = ${desktop_id} AND user_id = ${user_id};
+  `
+  const [data] = await connection.promise().query(statement)
+  return data
+}
+
+export const getLogs = async (id: number) => {
+  const statement = `
+    SELECT
+      desktop_log.*,
+      JSON_OBJECT(
+        'name', user.name,
+        'name_en', user.name_en
+      ) AS user_info
+    FROM desktop_log
+    LEFT JOIN user
+      ON user.id = desktop_log.user_id
+    WHERE desktop_log.desktop_id = ${id}
+  `
+
+  const [data] = await connection.promise().query(statement)
   return data
 }

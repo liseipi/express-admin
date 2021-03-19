@@ -8,7 +8,8 @@ export const getDesktop = async () => {
       SUM(IF(status = 1, 1, 0)) AS status1,
       SUM(IF(status = 2, 1, 0)) AS status2,
       SUM(IF(status = 3, 1, 0)) AS status3,
-      SUM(IF(status = 4, 1, 0)) AS status4
+      SUM(IF(status = 4, 1, 0)) AS status4,
+      SUM(IF(status = 5, 1, 0)) AS status5
     FROM desktop;
   `
   const [data] = await connection.promise().query(statement)
@@ -23,7 +24,8 @@ export const getMonitor = async () => {
       SUM(IF(status = 1, 1, 0)) AS status1,
       SUM(IF(status = 2, 1, 0)) AS status2,
       SUM(IF(status = 3, 1, 0)) AS status3,
-      SUM(IF(status = 4, 1, 0)) AS status4
+      SUM(IF(status = 4, 1, 0)) AS status4,
+      SUM(IF(status = 5, 1, 0)) AS status5
     FROM monitor;
   `
   const [data] = await connection.promise().query(statement)
@@ -38,7 +40,8 @@ export const getOther = async () => {
       SUM(IF(status = 1, 1, 0)) AS status1,
       SUM(IF(status = 2, 1, 0)) AS status2,
       SUM(IF(status = 3, 1, 0)) AS status3,
-      SUM(IF(status = 4, 1, 0)) AS status4
+      SUM(IF(status = 4, 1, 0)) AS status4,
+      SUM(IF(status = 5, 1, 0)) AS status5
     FROM other;
   `
   const [data] = await connection.promise().query(statement)
